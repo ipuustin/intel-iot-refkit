@@ -6,6 +6,7 @@ LIC_FILES_CHKSUM = "file://LICENSE;md5=3b83ef96387f14655fc854ddc3c6bd57"
 
 SRC_URI_append = " \
     file://0001-scripts-removed-bashisms.patch \
+    file://0001-examples-control-building-of-the-graphical-examples.patch \
 "
 
 DEPENDS = "libusb1"
@@ -16,8 +17,8 @@ RDEPENDS_${PN}-graphical-examples += "${PN} libgl-mesa"
 inherit cmake pkgconfig
 
 EXTRA_OECMAKE = " \
-	-DBUILD_SHARED_LIBS:BOOL=ON -DBUILD_UNIT_TESTS:BOOL=OFF \
-	-DBUILD_EXAMPLES:BOOL=${@bb.utils.contains('DISTRO_FEATURES', 'x11 opengl', 'ON', 'OFF', d)} \
+	-DBUILD_SHARED_LIBS:BOOL=ON -DBUILD_UNIT_TESTS:BOOL=OFF -DBUILD_EXAMPLES:BOOL=ON \
+	-DBUILD_GRAPHICAL_EXAMPLES:BOOL=${@bb.utils.contains('DISTRO_FEATURES', 'x11 opengl', 'ON', 'OFF', d)} \
 "
 
 do_install_append() {
@@ -25,8 +26,8 @@ do_install_append() {
 	install -m 0644 ${S}/config/99-realsense-libusb.rules ${D}${sysconfdir}/udev/rules.d
 }
 
-PACKAGES = "${PN} ${PN}-dbg ${PN}-dev"
-PACKAGES += "${@bb.utils.contains('DISTRO_FEATURES', 'x11 opengl', '${PN}-examples ${PN}-graphical-examples', '', d)}"
+PACKAGES = "${PN} ${PN}-dbg ${PN}-dev ${PN}-examples"
+PACKAGES += "${@bb.utils.contains('DISTRO_FEATURES', 'x11 opengl', '${PN}-graphical-examples', '', d)}"
 
 FILES_${PN} = "\
 	${libdir}/*.so.* \
