@@ -4,9 +4,12 @@ SECTION = "libs"
 LICENSE = "Apache-2.0"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=3b83ef96387f14655fc854ddc3c6bd57"
 
+SRC_URI_append = " \
+    file://0001-scripts-removed-bashisms.patch \
+"
+
 DEPENDS = "libusb1"
 DEPENDS += "${@bb.utils.contains('DISTRO_FEATURES', 'x11 opengl', 'libpng libglu glfw', '', d)}"
-RDEPENDS_${PN} = "bash"
 RDEPENDS_${PN}-examples += "${PN}"
 RDEPENDS_${PN}-graphical-examples += "${PN} libgl-mesa"
 
